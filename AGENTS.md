@@ -28,6 +28,10 @@ plus a headless CLI (`LibationCli`) that shares the same config and SQLite libra
 - Build the runnable cross-platform apps directly:
   - `dotnet build Source/LibationAvalonia/LibationAvalonia.csproj`
   - `dotnet build Source/LibationCli/LibationCli.csproj`
+  - `dotnet build Source/LibationWeb/LibationWeb.csproj` — the web portal (ASP.NET Core minimal API
+    plus static files in `wwwroot`; docs in `docs/installation/web-portal.md`). Running it needs
+    `LIBATION_WEB_PASSWORD` (or `LIBATION_WEB_ALLOW_ANONYMOUS=1`) and, like the CLI, a Libation files
+    folder with a `Settings.json`; it reads settings ephemerally and never writes them back.
 - There is no dedicated lint step; the repo's `.editorconfig` is minimal and CI
   (`.github/workflows/validate.yml`) only builds and tests. The compiler/analyzer warnings from a
   normal build serve as the static-analysis check. (A known transitive `NU1903` SQLite

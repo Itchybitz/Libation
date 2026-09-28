@@ -1,0 +1,8 @@
+# Both Dockerfiles copy Source/ into a Linux SDK image. Build output from a Windows or macOS checkout
+# (project.assets.json with local paths, bin/ with the wrong runtime) must not ride along.
+**/bin/
+**/obj/
+**/node_modules/
+**/.vs/
+.git/
+.vitepress/cache/

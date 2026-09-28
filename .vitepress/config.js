@@ -80,6 +80,7 @@ export default defineConfig({
           { text: "Linux", link: "/docs/installation/linux" },
           { text: "Mac", link: "/docs/installation/mac" },
           { text: "Docker", link: "/docs/installation/docker" },
+          { text: "Web Portal (remote access)", link: "/docs/installation/web-portal" },
         ],
       },
       {

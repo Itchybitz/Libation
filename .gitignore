@@ -382,3 +382,6 @@ FodyWeavers.xsd
 node_modules
 .vitepress/cache
 .vitepress/dist   
+# Local deployment secrets (portal password, API token). See .env.web.example.
+.env
+.env.web

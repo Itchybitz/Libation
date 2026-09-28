@@ -12,6 +12,7 @@
 - **Advanced Organization**: Search, filter, and tag your books.
 - **Fast & Efficient**: Powered by AAXClean for fast decryption without heavy dependencies like ffmpeg.
 - **Import**: Easily import your existing library, including cover art.
+- **Web Portal**: Run `LibationWeb` on a server or NAS and scan, browse and download from your phone, wherever you are. See [Web Portal (remote access)](docs/installation/web-portal.md).
 
 ## Getting started with Libation
 
@@ -33,6 +34,7 @@ Comprehensive documentation is available in the `docs` directory and on our [Doc
 - [Getting Started](https://getlibation.com/docs/getting-started)
 - [FAQ](https://getlibation.com/docs/frequently-asked-questions)
 - [Spatial Audio & DRM](https://getlibation.com/docs/advanced/spatial-audio)
+- [Web Portal (remote access)](docs/installation/web-portal.md)
 
 ## Development & Contributing
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<RootNamespace>LibationWeb</RootNamespace>
+		<AssemblyName>LibationWeb</AssemblyName>
+		<IsPublishable>true</IsPublishable>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<!-- The page is a handful of static files; nothing here needs the SPA proxy or a bundler. -->
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Same as LibationCli: Audible's endpoints misbehave over IPv6 on some networks. -->
+		<RuntimeHostConfigurationOption Include="System.Net.DisableIPv6" Value="true" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- The page is served from the output folder (Program.cs sets the content root to the app's
+		     directory), so a plain build must carry wwwroot along the way publish already does. -->
+		<Content Update="wwwroot\**" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ApplicationServices\ApplicationServices.csproj" />
+		<ProjectReference Include="..\AppScaffolding\AppScaffolding.csproj" />
+		<ProjectReference Include="..\FileLiberator\FileLiberator.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.400" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
+
+</Project>

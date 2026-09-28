@@ -169,7 +169,9 @@ run() {
   /libation/LibationCli liberate
 }
 
-main() {
+# Shared by this script (the scan/liberate loop) and web-entrypoint.sh (the web portal): stage the
+# mounted config, apply the container's folder overrides and locate the database.
+init_libation() {
   info "initializing libation"
   init_config_file AccountsSettings.json
   init_config_file Settings.json
@@ -195,6 +197,10 @@ main() {
   then
     warn "${LIBATION_BOOKS_DIR} does not appear to be mounted, books will not be saved"
   fi
+}
+
+main() {
+  init_libation
 
   # If a command was passed to the container (e.g. `docker run -it libation bash`),
   # run that instead of the liberate loop so the environment is still set up
@@ -230,4 +236,7 @@ main() {
   info "exiting"
 }
 
-main "$@"
+# Run the loop only when executed directly. web-entrypoint.sh sources this file for its functions.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi

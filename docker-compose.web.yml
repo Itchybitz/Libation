@@ -1,0 +1,36 @@
+# Libation's web portal as one container, typically on the NAS beside the player that serves the
+# books (Nightstand, Audiobookshelf, ...). Full walkthrough: docs/installation/web-portal.md
+#
+#   cp .env.web.example .env      # then edit the paths and the password
+#   sudo docker compose -f docker-compose.web.yml up -d --build
+#
+services:
+  libation-web:
+    build:
+      context: .
+      dockerfile: Docker/LibationWeb.Dockerfile
+    container_name: libation-web
+    # The uid/gid that may read the config folder and WRITE the books folder. `id <user>` over SSH.
+    user: "${PUID:-1001}:${PGID:-1001}"
+    ports:
+      - "${LIBATION_WEB_PORT:-8791}:8791"
+    environment:
+      # Sign-in password for the portal, 8+ characters. Required.
+      - LIBATION_WEB_PASSWORD=${LIBATION_WEB_PASSWORD:?Set LIBATION_WEB_PASSWORD (8+ characters) in .env}
+      # Optional shared secret another server (Nightstand) sends as "Authorization: Bearer ..." to use the API.
+      - LIBATION_WEB_TOKEN=${LIBATION_WEB_TOKEN:-}
+      # Books downloaded at once, 1-4. One is kind to a NAS and to Audible.
+      - LIBATION_WEB_CONCURRENCY=${LIBATION_WEB_CONCURRENCY:-1}
+      # Set to the docker bridge gateway (e.g. 172.17.0.1) once DSM's reverse proxy is in front, so the
+      # portal sees real client addresses and HTTPS. Leave empty when phones reach port 8791 directly.
+      - LIBATION_WEB_TRUST_PROXY=${LIBATION_WEB_TRUST_PROXY:-}
+      # Decrypts tokens exported from the desktop when libation-master.key is not in the config folder.
+      - LIBATION_MASTER_KEY_FILE=${LIBATION_MASTER_KEY_FILE:-}
+      - LIBATION_MASTER_KEY=${LIBATION_MASTER_KEY:-}
+      - TZ=${TZ:-UTC}
+    volumes:
+      # AccountsSettings.json, Settings.json, libation-master.key and LibationContext.db from the desktop install.
+      - ${LIBATION_CONFIG_PATH:?Set LIBATION_CONFIG_PATH in .env, e.g. /volume1/docker/libation/config}:/config
+      # Where the books land: the folder your player scans (Nightstand's SHELVES_PATH / Audiobookshelf's library folder).
+      - ${LIBATION_BOOKS_PATH:?Set LIBATION_BOOKS_PATH in .env, e.g. /volume1/media/AudioBooks}:/data
+    restart: unless-stopped

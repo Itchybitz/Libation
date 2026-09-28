@@ -1,0 +1,33 @@
+# Libation web portal as a Portainer stack (Stacks -> Add stack -> Web editor, paste this file).
+#
+# This stack does NOT build anything: it runs an image you have already loaded on the NAS, either by
+# importing the saved tar in Portainer (Images -> Import) or over SSH with `docker load -i <file>.tar`.
+# Every ${VARIABLE} below is filled in from the stack's "Environment variables" section in Portainer
+# (a .env file next to the stack is not read). Paths must be absolute paths on the NAS.
+#
+#   PUID / PGID              the DSM user that may read the config folder and write the books folder (`id <user>` over SSH)
+#   LIBATION_CONFIG_PATH     e.g. /volume1/docker/libation/config  (AccountsSettings.json, Settings.json, libation-master.key, LibationContext.db)
+#   LIBATION_BOOKS_PATH      e.g. /volume1/media/AudioBooks        (the folder your player scans; Nightstand's SHELVES_PATH)
+#   LIBATION_WEB_PASSWORD    sign-in password, 8+ characters
+#   LIBATION_WEB_TOKEN       optional bearer token for another server (Nightstand) to use the API
+#   LIBATION_WEB_PORT        host port, default 8791
+#   TZ                       e.g. America/New_York
+#
+# Full walkthrough: docs/installation/web-portal.md, section "Deploying with Portainer".
+services:
+  libation-web:
+    image: libation-web:14.2.1
+    container_name: libation-web
+    user: "${PUID}:${PGID}"
+    ports:
+      - "${LIBATION_WEB_PORT:-8791}:8791"
+    environment:
+      - LIBATION_WEB_PASSWORD=${LIBATION_WEB_PASSWORD}
+      - LIBATION_WEB_TOKEN=${LIBATION_WEB_TOKEN:-}
+      - LIBATION_WEB_CONCURRENCY=${LIBATION_WEB_CONCURRENCY:-1}
+      - LIBATION_WEB_TRUST_PROXY=${LIBATION_WEB_TRUST_PROXY:-}
+      - TZ=${TZ:-UTC}
+    volumes:
+      - ${LIBATION_CONFIG_PATH}:/config
+      - ${LIBATION_BOOKS_PATH}:/data
+    restart: unless-stopped
